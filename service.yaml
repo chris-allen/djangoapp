@@ -1,0 +1,22 @@
+name: djangoapp
+
+profiles:
+  stable:
+    endpoint: /djangoapp/
+    minikube: true
+    max_memory: 0.5G
+    max_cpu: 0.5
+  canary:
+    endpoint: /djangoapp/
+    weight: 10 # percentage of traffic to route to this class of deployment
+    max_memory: 0.25G
+    max_cpu: 0.25
+  default:
+    name: {{branch.replace('/', '-')}}
+    endpoint: /preview/djangoapp/{{branch}}/
+    max_memory: 0.25G
+    max_cpu: 0.25
+
+branches:
+  master: stable
+  dev: stable

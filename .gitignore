@@ -79,6 +79,9 @@ ENV/
 # mypy
 .mypy_cache/
 
+# forge
+.forge/
+forge.yaml
 
 ### Node template
 # Logs

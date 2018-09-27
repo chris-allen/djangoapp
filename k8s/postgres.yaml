@@ -1,0 +1,49 @@
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: postgres-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+         name: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: apax/postgres-pw
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgresdata
+          mountPath: /usr/local/var/postgres
+      volumes:
+      - name: postgresdata
+        persistentVolumeClaim:
+          claimName: postgres-data
+---
+metadata:
+ name: postgres
+kind: Service
+apiVersion: v1
+spec:
+  ports:
+  - name: postgres
+    protocol: TCP
+    port: 5432
+    targetPort: 5432
+  selector:
+    name: postgres
